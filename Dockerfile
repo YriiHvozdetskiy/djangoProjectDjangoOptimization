@@ -5,6 +5,7 @@ COPY service /service
 WORKDIR /service
 EXPOSE 8000
 
+# -r показуєм з якого файлу потрібно встановити залежності
 RUN pip install -r /temp/requirements.txt
 
 RUN adduser --disabled-password service-user

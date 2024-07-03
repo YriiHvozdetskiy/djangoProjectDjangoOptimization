@@ -1,0 +1,18 @@
+
+# services - це те за допомогою чого будуть створюватися containers за допомогою docker-compose
+services:
+# web-app - django development server
+  web-app:
+    build:
+# context: . - шлях до директорії з Dockerfile
+# Dockerfile - буде використаний docker-compose для білда image і запуску з нього containera
+      context: .
+    ports:
+      - "8000:8000"
+# volumes - місця для зберігання даних, ./service - локальна папка яку підключуємо до контейнера
+# всі зміни які будем робити локально будуть зберігатися в докер-контейнері (щоб не робити ребілдів)
+    volumes:
+      - ./service:/service
+# command - для запуску django server
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
