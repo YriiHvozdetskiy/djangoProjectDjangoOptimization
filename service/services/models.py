@@ -26,6 +26,6 @@ class Plan(models.Model):
 
 class Subscription(models.Model):
     # related_name - з яким імям вона буде доступна з тою моделю з якою робим зв'язок
-    client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='subscriptions')
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='subscriptions', null=True)
     service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name='subscriptions')
-    plan = models.ForeignKey(Plan, related_name='subscriptions', on_delete=models.PROTECT)
+    plan = models.ForeignKey(Plan, on_delete=models.PROTECT, related_name='subscriptions')

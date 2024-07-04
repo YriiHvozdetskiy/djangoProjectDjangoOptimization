@@ -36,3 +36,9 @@ services:
       - POSTGRES_DB=dbname
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Це стандартний шлях, де PostgreSQL зберігає свої дані в контейнері.
+
+# postgres_data додали назву для volumes
+volumes:
+    postgres_data:
