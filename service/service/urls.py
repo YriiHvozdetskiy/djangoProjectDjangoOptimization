@@ -15,7 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework import routers
+
+from services.views import SubscriptionView
+
+# DefaultRouter - генерує URL-адреси для стандартних CRUD (Create, Read, Update, Delete) операцій,
+# За замовчуванням додає завершальний слеш до URL.
+router = routers.DefaultRouter()
+router.register(r'api/subscriptions', SubscriptionView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+# до URL urlpatterns додаємо URL з router
+urlpatterns += router.urls
