@@ -12,7 +12,7 @@ services:
     # всі зміни які будем робити локально будуть зберігатися в докер-контейнері (щоб не робити ребілдів)
     volumes:
       - ./service:/service
-    entrypoint:
+    environment:
       - DB_HOST=database # DB_HOST - вказуєм силку на інший сервіс docker-compose, а саме: database
       - DB_NAME=dbname
       - DB_USER=dbuser
@@ -26,14 +26,13 @@ services:
     depends_on:
       - database
 
-
   # database - база даних
   database:
     # postgres - використовуєм образ з docker-hub
     # 14.6-alpine - версія образу
     image: postgres:14.6-alpine
     # прописуєм зміні: POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD щоб звязатися з web-app
-    entrypoint:
+    environment:
       - POSTGRES_DB=dbname
       - POSTGRES_USER=dbuser
-      - POSTGRES_PASSWORD=dbpass
+      - POSTGRES_PASSWORD=pass
