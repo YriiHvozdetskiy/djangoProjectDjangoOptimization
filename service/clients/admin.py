@@ -2,4 +2,11 @@ from django.contrib import admin
 
 from clients.models import Client
 
-admin.site.register(Client)
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    pass
+
+# or
+
+# admin.site.register(Client)

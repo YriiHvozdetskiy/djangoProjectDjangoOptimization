@@ -11,7 +11,7 @@ class PlanSerializer(serializers.ModelSerializer):
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     plan = PlanSerializer()
-    client_name = serializers.CharField(source='client.company_name')  # client.company_name - бачити яка компанія
+    client_name = serializers.CharField(source='client.company_name')  # source - бачити яка компанія
     email = serializers.CharField(source='client.user.email')
 
     class Meta:
