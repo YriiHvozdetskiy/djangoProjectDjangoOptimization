@@ -41,6 +41,31 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data # Це стандартний шлях, де PostgreSQL зберігає свої дані в контейнері.
 
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
+
+  # worker(celery)
+  worker:
+    # build - робем білд для такогож приложенія як web-app(з таким ж залежностями і конфігом)
+    build:
+      context: . # Використовуємо той самий Dockerfile, що і для web-app
+    hostname: worker
+    # entrypoint - вказуємо команду за якою будем викликати інші команди до цього сервісу
+    entrypoint: celery
+    # celery_app - файл який ми зараз створили
+    # app - зміна в цьому файлі яку зараз створимо
+    # info - це рівень, який забезпечує детальну інформацію про роботу worker'а, але без надмірної деталізації.
+    # Інші можливі рівні: debug, warning, error, critical.
+    # --loglevel=info то саме що -l info
+    command: -A celery_app.app worker --loglevel=info
+    volumes:
+      - ./service:/service
+    links:
+      - redis
+    depends_on:
+      - redis
+
 # postgres_data додали назву для volumes
 volumes:
-    postgres_data:
+  postgres_data:

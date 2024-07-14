@@ -136,3 +136,7 @@ LOGGING = {
         }
     }
 }
+
+# вказуєм django який url буде в celery broker тобто в redis
+# /0 - звертаємось до бази даних в redis (звертаємось конкретно до 0)
+CELERY_BROKER_URL = 'redis://redis:6379/0'
