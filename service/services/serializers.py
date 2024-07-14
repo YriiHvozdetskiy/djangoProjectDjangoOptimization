@@ -13,6 +13,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     plan = PlanSerializer()
     client_name = serializers.CharField(source='client.company_name')  # source - бачити яка компанія
     email = serializers.CharField(source='client.user.email')
+    # SerializerMethodField - серіалізатор шукає таку функцію з префіксом get (наведи і прочитай)
+    price = serializers.SerializerMethodField()
+
+    # instance - конкретна підписка
+    def get_price(self, instance):
+        return (instance.service.full_price
+                - instance.service.full_price * (instance.plan.discount_percent / 100))
 
     class Meta:
         model = Subscription
@@ -22,4 +29,4 @@ class SubscriptionSerializer(serializers.ModelSerializer):
          plan_id - скрито в plan = models.ForeignKey(Plan, on_delete=models.PROTECT, related_name='subscriptions')
          але ми можем до нього звитратися тут.
         """
-        fields = ('id', 'plan_id', 'client_name', 'email', 'plan')
+        fields = ('id', 'plan_id', 'client_name', 'email', 'plan', 'price')
