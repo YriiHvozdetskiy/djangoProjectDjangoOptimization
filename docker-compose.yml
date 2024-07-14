@@ -66,6 +66,22 @@ services:
     depends_on:
       - redis
 
+  # Flower - це вебінтерфейс для моніторингу Celery
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A celery_app.app flower
+    volumes:
+      - ./service:/service
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
+
 # postgres_data додали назву для volumes
 volumes:
   postgres_data:
