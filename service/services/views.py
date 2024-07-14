@@ -23,12 +23,12 @@ class SubscriptionView(ReadOnlyModelViewSet):
                      F('service__full_price') * F('plan__discount_percent') / 100.00)
     serializer_class = SubscriptionSerializer
 
-    # зробили це щоб додати ще дані на одному рівні з result
-    # aggregate - вірноситься до ВСІХ Subscription
+    # зробили це щоб додати ще дані на одному рівні з result (перевизначання)
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         response = super().list(request, *args, **kwargs)
-
+        # aggregate - вірноситься до ВСІХ Subscription
+        # aggregate - виводимо сумарну інформацію по групі записів
         response_data = {'result': response.data}
         response_data['total_amount'] = queryset.aggregate(
             total=Sum('price')).get('total')
