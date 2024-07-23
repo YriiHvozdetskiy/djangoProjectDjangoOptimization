@@ -19,8 +19,8 @@ class SubscriptionView(ReadOnlyModelViewSet):
         )
         # annotate - вираховуємо значення на рівні бази(щоб не писати ще один prefetch)
         # annotate - вірноситься до КОЖНОГО із Subscription
-    ).annotate(price=F('service__full_price') -
-                     F('service__full_price') * F('plan__discount_percent') / 100.00)
+    )#.annotate(price=F('service__full_price') -
+      #               F('service__full_price') * F('plan__discount_percent') / 100.00)
     serializer_class = SubscriptionSerializer
 
     # зробили це щоб додати ще дані на одному рівні з result (перевизначання)

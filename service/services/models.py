@@ -2,10 +2,13 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 
 from clients.models import Client
+from services.tasks import set_price
 
 """
     тут описуєм моделі (дазу даних)
 """
+
+
 class Service(models.Model):
     # CharField - для max_length обов'язкове поле
     name = models.CharField(max_length=50)
@@ -48,6 +51,13 @@ class Subscription(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='subscriptions', null=True)
     service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name='subscriptions')
     plan = models.ForeignKey(Plan, on_delete=models.PROTECT, related_name='subscriptions')
+    price = models.PositiveIntegerField(default=0)
+
+    def save(self, *args, save_model=True, **kwargs):
+        if save_model:
+            set_price.delay(self.id)
+
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.client} - {self.service} ({self.plan})"
