@@ -1,4 +1,8 @@
+import time
+
 from celery import shared_task
+from celery_singleton import Singleton
+from django.db.models import F
 
 """
   таска влаштована так що стоїть в черзі і чикає поки її celery забере 
@@ -7,13 +11,17 @@ from celery import shared_task
 """
 
 
-@shared_task
+@shared_task(base=Singleton)
 def set_price(subscription_id):
     # крос імпорт
     from services.models import Subscription
 
-    subscription = Subscription.objects.get(id=subscription_id)
-    new_price = (subscription.service.full_price - subscription.service.full_price
-                 * subscription.plan.discount_percent / 100)
-    subscription.price = new_price
-    subscription.save(save_model=False)
+    # емулюємо реальні дані (емолюємо розрахунки)
+    time.sleep(5)
+
+    subscription = Subscription.objects.filter(id=subscription_id).annotate(
+        annotate_price=F('service__full_price') -
+                       F('service__full_price') * F('plan__discount_percent') / 100.00).first()
+
+    subscription.price = subscription.annotate_price
+    subscription.save()
