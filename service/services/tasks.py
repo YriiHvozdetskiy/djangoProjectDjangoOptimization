@@ -11,6 +11,9 @@ from django.db.models import F
 """
 
 
+# @shared_task - Цей декоратор перетворює функцію на завдання Celery.
+# @shared_task - Цей декоратор перетворює функцію на завдання Celery.
+# Він дозволяє викликати функцію за допомогою методів Celery, таких як delay()
 @shared_task(base=Singleton)
 def set_price(subscription_id):
     # крос імпорт
@@ -22,6 +25,8 @@ def set_price(subscription_id):
     subscription = Subscription.objects.filter(id=subscription_id).annotate(
         annotate_price=F('service__full_price') -
                        F('service__full_price') * F('plan__discount_percent') / 100.00).first()
+    # annotate - вираховуємо значення на рівні бази(щоб не писати ще один prefetch)
+    # annotate - вірноситься до КОЖНОГО із Subscription
 
     subscription.price = subscription.annotate_price
     subscription.save()

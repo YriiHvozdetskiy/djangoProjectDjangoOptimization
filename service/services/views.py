@@ -17,8 +17,6 @@ class SubscriptionView(ReadOnlyModelViewSet):
             queryset=Client.objects.all().select_related('user').only('company_name',
                                                                       'user__email'),
         )
-        # annotate - вираховуємо значення на рівні бази(щоб не писати ще один prefetch)
-        # annotate - вірноситься до КОЖНОГО із Subscription
     )
     serializer_class = SubscriptionSerializer
 
