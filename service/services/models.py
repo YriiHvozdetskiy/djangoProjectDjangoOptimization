@@ -76,6 +76,7 @@ class Subscription(models.Model):
     service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name='subscriptions')
     plan = models.ForeignKey(Plan, on_delete=models.PROTECT, related_name='subscriptions')
     price = models.PositiveIntegerField(default=0)
+    comment = models.CharField(max_length=50, default='')
 
     def __str__(self):
         return f"{self.client} - {self.service} ({self.plan})"
