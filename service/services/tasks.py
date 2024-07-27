@@ -5,6 +5,8 @@ from celery import shared_task
 from celery_singleton import Singleton
 from django.db import transaction
 from django.db.models import F
+from django.conf import settings
+from django.core.cache import cache
 
 """
   таска влаштована так що стоїть в черзі і чикає поки її celery забере 
@@ -22,7 +24,8 @@ def set_price(subscription_id):
     from services.models import Subscription
 
     # емулюємо реальні дані (емолюємо розрахунки)
-    time.sleep(5)
+    # time.sleep(5)
+
     # with transaction.atomic - Це гарантує, що всі операції всередині блоку будуть виконані як одна атомарна транзакція.
     # атомарна - все разом
     with transaction.atomic():
@@ -37,6 +40,8 @@ def set_price(subscription_id):
         subscription.price = subscription.annotated_price
         subscription.save()
 
+    cache.delete(settings.PRICE_CACHE_NAME)
+
 
 @shared_task(base=Singleton)
 def set_comment(subscription_id):
@@ -50,3 +55,5 @@ def set_comment(subscription_id):
 
         subscription.comment = str(datetime.datetime.now())
         subscription.save()
+
+    cache.delete(settings.PRICE_CACHE_NAME)
