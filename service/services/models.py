@@ -78,7 +78,10 @@ class Subscription(models.Model):
     service = models.ForeignKey(Service, on_delete=models.PROTECT, related_name='subscriptions')
     plan = models.ForeignKey(Plan, on_delete=models.PROTECT, related_name='subscriptions')
     price = models.PositiveIntegerField(default=0)
-    comment = models.CharField(max_length=50, default='')
+    comment = models.CharField(max_length=50, default='', db_index=True)
+
+    field_a = models.CharField(max_length=50, default='')
+    field_b = models.CharField(max_length=50, default='')
 
     def save(self, *args, **kwargs):
         # якщо нема ід - значить це нова підпискал
@@ -94,6 +97,19 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = "Підписка"
         verbose_name_plural = "Підписки"
+        # складений індекс
+        """
+            Порядок полів:
+                Порядок полів у складеному індексі важливий. У цьому випадку індекс буде корисний для запитів,
+                які фільтрують по field_a або по field_a та field_b разом.
+                
+            Subscription.objects.filter(field_a='value', field_b='value')
+            Subscription.objects.filter(field_a='value')
+            Але не буде використовуватися для запитів, які фільтрують тільки по field_b.
+        """
+        indexes = [
+            models.Index(fields=['field_a', 'field_b'])
+        ]
 
 
 post_delete.connect(delete_cache_total_sum, sender=Subscription)
