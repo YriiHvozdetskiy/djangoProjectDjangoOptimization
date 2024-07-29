@@ -36,9 +36,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'cachalot',
+
     'clients',
     'services',
 ]
+# clients.Client - назва таблиці в базі даних
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
