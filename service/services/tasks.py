@@ -39,7 +39,7 @@ def set_price(subscription_id):
 
         subscription.price = subscription.annotated_price
         subscription.save()
-
+    #  якщо буде помилка в transaction.atomic, cache.delete - не виконається
     cache.delete(settings.PRICE_CACHE_NAME)
 
 
@@ -55,5 +55,5 @@ def set_comment(subscription_id):
 
         subscription.comment = str(datetime.datetime.now())
         subscription.save()
-
+    #  якщо буде помилка в transaction.atomic, cache.delete - не виконається
     cache.delete(settings.PRICE_CACHE_NAME)
